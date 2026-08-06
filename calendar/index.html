@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="个人日程日历：查看空闲时段并管理每日日程">
+  <title>个人日程日历</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">📅</span>
+      <div>
+        <h1 id="siteTitle">个人日程日历</h1>
+        <span id="siteSub" class="sub"></span>
+      </div>
+    </div>
+    <div class="nav">
+      <button id="btnPrev" title="上个月">‹</button>
+      <span id="monthLabel">2026年8月</span>
+      <button id="btnNext" title="下个月">›</button>
+      <button id="btnToday" class="ghost" style="width:auto;padding:0 12px;font-size:13px;">今天</button>
+    </div>
+    <div class="actions">
+      <button id="btnGuestMode" class="ghost btn-guest"></button>
+      <button id="btnManage" class="primary-ghost btn-manage">管理</button>
+    </div>
+  </header>
+
+  <div class="legend-bar">
+    <span>格子：</span>
+    <span class="lg"><i class="sw sw-green"></i>全空闲</span>
+    <span class="lg"><i class="sw sw-yellow"></i>部分空闲</span>
+    <span class="lg"><i class="sw sw-red"></i>全忙碌</span>
+    <span class="lg"><i class="sw sw-gray"></i>无日程</span>
+    <span style="margin-left:6px;">日程：</span>
+    <span class="lg"><i class="dot dot-green"></i>空闲</span>
+    <span class="lg"><i class="dot dot-orange"></i>非空闲</span>
+    <span id="guestModeTag" class="tag"></span>
+  </div>
+
+  <main class="layout">
+    <section class="calendar-panel">
+      <div class="week-head">
+        <span>六</span><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+    <aside class="sidebar" id="sidebar"></aside>
+  </main>
+
+  <div id="modalRoot"></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
