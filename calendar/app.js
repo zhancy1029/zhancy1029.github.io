@@ -44,6 +44,8 @@ function init() {
   state.viewMonth = now.getMonth() + 1;
   state.token = localStorage.getItem(LS_TOKEN) || '';
   state.manage = !!state.token;
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('admin') === '1') openManage();
   bindEvents();
   renderAll();
   loadData();
@@ -125,11 +127,13 @@ function renderGuestModeButton() {
   var full = state.config.guestViewMode === 'full';
   els.btnGuestMode.textContent = full ? '恢复仅状态' : '对游客全开放';
   els.btnGuestMode.classList.toggle('active', full);
+  els.btnGuestMode.style.display = state.manage ? '' : 'none';
   els.guestModeTag.textContent = '游客可见：' + (full ? '全开放（显示内容）' : '仅状态');
   els.guestModeTag.classList.toggle('tag-full', full);
 }
 
 function renderManageButton() {
+  els.btnManage.style.display = state.manage ? '' : 'none';
   els.btnManage.classList.toggle('active', state.manage);
 }
 
@@ -184,7 +188,7 @@ function shiftSelectedDay(delta) {
 function renderSidebar() {
   var key = state.selectedKey;
   if (!key) {
-    els.sidebar.innerHTML = '<div class="side-empty">点击日期查看当日日程</div>';
+    els.sidebar.innerHTML = '<div class="side-empty">点击日期查看当日日程</div>' + programLegendHtml();
     return;
   }
   var o = Core.parseDateKey(key);
@@ -232,7 +236,15 @@ function renderSidebar() {
   if (!state.manage && state.config.guestViewMode === 'status') {
     html += '<div class="guest-note">具体事项内容仅日程主人可见</div>';
   }
+  html += programLegendHtml();
   els.sidebar.innerHTML = html;
+}
+
+function programLegendHtml() {
+  return '<div class="prog-legend">'
+    + '<span class="lg"><i class="dot dot-green"></i>空闲</span>'
+    + '<span class="lg"><i class="dot dot-orange"></i>非空闲</span>'
+    + '</div>';
 }
 
 function renderFormHtml(key) {
