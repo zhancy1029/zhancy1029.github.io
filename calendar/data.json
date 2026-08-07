@@ -1,9 +1,14 @@
 {
   "config": {
     "ownerName": "",
-    "guestViewMode": "status",
+    "guestViewMode": "full",
     "viewKey": null,
-    "busyOptions": ["工作", "通勤", "吃饭", "学习"]
+    "busyOptions": [
+      "工作",
+      "通勤",
+      "吃饭",
+      "学习"
+    ]
   },
   "programs": []
 }
