@@ -40,10 +40,10 @@
     return WEEKDAY_CN[keyToDate(key).getDay()];
   }
 
-  /* 生成某月日历格子，周六在最左。inMonth=false 表示相邻月份补位 */
+  /* 生成某月日历格子，周日在最左。inMonth=false 表示相邻月份补位 */
   function monthGrid(year, month) {
     var firstDow = new Date(year, month - 1, 1).getDay();
-    var lead = (firstDow + 1) % 7;
+    var lead = firstDow;
     var dim = daysInMonth(year, month);
     var total = Math.ceil((lead + dim) / 7) * 7;
     var cells = [];
@@ -159,6 +159,14 @@
     }) || null;
   }
 
+  /* 相邻日程间的空档分级：返回 CSS 间距类名 */
+  function gapTier(gapMin) {
+    if (gapMin <= 0) return '';
+    if (gapMin <= 30) return 'gap-small';
+    if (gapMin < 120) return 'gap-med';
+    return 'gap-large';
+  }
+
   function uid() {
     if (global.crypto && typeof global.crypto.randomUUID === 'function') return global.crypto.randomUUID();
     return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -189,6 +197,7 @@
     validateInput: validateInput,
     overlaps: overlaps,
     findOverlap: findOverlap,
+    gapTier: gapTier,
     uid: uid,
     shortDate: shortDate
   };

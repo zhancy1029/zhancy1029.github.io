@@ -9,7 +9,7 @@ var LS_TOKEN = 'schedule_gh_token';
 
 var state = {
   programs: [],
-  config: { ownerName: '', guestViewMode: 'status', viewKey: null },
+  config: { ownerName: '', guestViewMode: 'status', viewKey: null, busyOptions: ['工作', '通勤', '吃饭', '学习'] },
   viewYear: 2026,
   viewMonth: 8,
   selectedKey: null,
@@ -211,9 +211,13 @@ function renderSidebar() {
     html += '<ul class="program-list">';
     for (var i = 0; i < dayPrograms.length; i++) {
       var p = dayPrograms[i];
+      var gapCls = '';
+      if (i > 0) {
+        gapCls = Core.gapTier(Core.timeToMin(p.start) - Core.timeToMin(dayPrograms[i - 1].end));
+      }
       var dotCls = p.status === 'free' ? 'dot-green' : 'dot-orange';
       var text = (state.manage || fullVisible) ? esc(p.content) : (p.status === 'free' ? '空闲' : '非空闲');
-      html += '<li class="program-item' + (state.manage ? ' manageable' : '') + '">'
+      html += '<li class="program-item' + (gapCls ? ' ' + gapCls : '') + (state.manage ? ' manageable' : '') + '">'
         + '<span class="dot ' + dotCls + '"></span>'
         + '<span class="p-time">' + p.start + '-' + p.end + '</span>'
         + '<span class="p-text">' + text + '</span>'
@@ -271,6 +275,7 @@ function renderFormHtml(key) {
     + '<label class="radio"><input type="radio" name="f-status" value="free"' + (status === 'free' ? ' checked' : '') + '> <i class="dot dot-green"></i>空闲</label>'
     + '<label class="radio"><input type="radio" name="f-status" value="busy"' + (status === 'busy' ? ' checked' : '') + '> <i class="dot dot-orange"></i>非空闲</label>'
     + '</div>'
+    + buildPresetsHtml()
     + '<label class="content-row">事项内容'
     + '<input type="text" id="f-content" placeholder="选空闲时自动为“空闲”" value="' + esc(content) + '"' + (status === 'free' ? ' disabled' : '') + '>'
     + '</label>'
@@ -298,6 +303,79 @@ function onSidebarClick(e) {
   else if (action === 'add') submitAdd();
   else if (action === 'update') submitUpdate();
   else if (action === 'cancel-edit') { state.editingId = null; renderSidebar(); }
+  else if (action === 'preset-pick') presetPick(btn);
+  else if (action === 'preset-add') presetAdd();
+  else if (action === 'preset-del') presetDel(Number(btn.dataset.index));
+  else if (action === 'preset-rename') presetRename(Number(btn.dataset.index));
+}
+
+function buildPresetsHtml() {
+  var opts = state.config.busyOptions || [];
+  var chips = opts.map(function (o) {
+    return '<button type="button" class="chip" data-action="preset-pick" data-value="' + esc(o) + '">' + esc(o) + '</button>';
+  }).join('');
+  var rows = opts.map(function (o, i) {
+    return '<div class="preset-row"><span>' + esc(o) + '</span>'
+      + '<button type="button" class="mini" data-action="preset-rename" data-index="' + i + '">改</button>'
+      + '<button type="button" class="mini danger" data-action="preset-del" data-index="' + i + '">删</button>'
+      + '</div>';
+  }).join('');
+  return '<div class="presets">'
+    + '<div class="presets-head"><span>常用事项</span></div>'
+    + '<div class="preset-chips">' + (chips || '<span class="hint-inline">暂无常用项</span>') + '</div>'
+    + '<details class="preset-manager"><summary>管理常用选项（不影响已添加日程）</summary>'
+    + '<div class="preset-edit-list">' + (rows || '<span class="hint-inline">暂无常用项</span>') + '</div>'
+    + '<div class="preset-add-row"><input type="text" id="f-preset-name" placeholder="新常用事项" maxlength="12">'
+    + '<button type="button" class="primary" data-action="preset-add">添加</button></div>'
+    + '</details>'
+    + '</div>';
+}
+
+function presetPick(btn) {
+  var val = btn.dataset.value;
+  var radios = document.querySelectorAll('input[name="f-status"]');
+  for (var i = 0; i < radios.length; i++) radios[i].checked = radios[i].value === 'busy';
+  syncContentField();
+  var c = $('f-content');
+  if (c) { c.disabled = false; c.value = val; }
+  updatePreview();
+}
+
+function presetAdd() {
+  var input = $('f-preset-name');
+  if (!input) return;
+  var name = input.value.trim().slice(0, 12);
+  if (!name) { showToast('请输入事项名称'); return; }
+  var opts = state.config.busyOptions || (state.config.busyOptions = []);
+  if (opts.indexOf(name) !== -1) { showToast('该选项已存在'); return; }
+  opts.push(name);
+  state.dirty = true;
+  renderSidebar();
+  showToast('已添加常用项（不影响已添加日程）');
+}
+
+function presetDel(idx) {
+  var opts = state.config.busyOptions || [];
+  if (idx < 0 || idx >= opts.length) return;
+  if (!confirm('删除常用项「' + opts[idx] + '」？已添加的日程内容不受影响。')) return;
+  opts.splice(idx, 1);
+  state.dirty = true;
+  renderSidebar();
+  showToast('已删除常用项');
+}
+
+function presetRename(idx) {
+  var opts = state.config.busyOptions || [];
+  if (idx < 0 || idx >= opts.length) return;
+  var name = prompt('输入新名称：', opts[idx]);
+  if (name === null) return;
+  name = name.trim().slice(0, 12);
+  if (!name) { showToast('名称不能为空'); return; }
+  if (opts.indexOf(name) !== -1 && opts.indexOf(name) !== idx) { showToast('该名称已存在'); return; }
+  opts[idx] = name;
+  state.dirty = true;
+  renderSidebar();
+  showToast('已修改常用项（不影响已添加日程）');
 }
 
 function onFormChange() {
