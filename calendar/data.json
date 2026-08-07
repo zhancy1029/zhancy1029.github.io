@@ -7,8 +7,66 @@
       "工作",
       "通勤",
       "吃饭",
-      "学习"
+      "学习",
+      "休息"
     ]
   },
-  "programs": []
+  "programs": [
+    {
+      "id": "7531fc90-ed8f-4833-abb0-ced63aae2b4c",
+      "date": "2026-08-07",
+      "start": "08:00",
+      "end": "12:00",
+      "status": "busy",
+      "content": "休息"
+    },
+    {
+      "id": "e4cd94be-1409-4dbc-ad12-4a36e2d24f7b",
+      "date": "2026-08-07",
+      "start": "12:00",
+      "end": "13:00",
+      "status": "busy",
+      "content": "吃饭"
+    },
+    {
+      "id": "2289f4e0-17e8-4aa4-ae08-2b0e0c34b74d",
+      "date": "2026-08-07",
+      "start": "14:00",
+      "end": "17:00",
+      "status": "busy",
+      "content": "学习"
+    },
+    {
+      "id": "bd7ebf03-62a5-4883-b07c-e1a2f98c67dc",
+      "date": "2026-08-07",
+      "start": "17:00",
+      "end": "19:00",
+      "status": "free",
+      "content": "空闲"
+    },
+    {
+      "id": "7306b102-6bac-495d-869e-d4d6b59994a7",
+      "date": "2026-08-07",
+      "start": "21:00",
+      "end": "22:00",
+      "status": "busy",
+      "content": "test"
+    },
+    {
+      "id": "2f728e0c-fab8-455f-b789-9171715f1e0a",
+      "date": "2026-08-08",
+      "start": "14:00",
+      "end": "18:00",
+      "status": "free",
+      "content": "空闲"
+    },
+    {
+      "id": "29ed73ff-4cc3-41bf-a948-ea5e67c4f265",
+      "date": "2026-09-24",
+      "start": "23:55",
+      "end": "24:00",
+      "status": "busy",
+      "content": "明天是cwy生日"
+    }
+  ]
 }
