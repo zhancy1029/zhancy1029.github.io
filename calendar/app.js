@@ -125,10 +125,10 @@ function renderSiteSub() {
 
 function renderGuestModeButton() {
   var full = state.config.guestViewMode === 'full';
-  els.btnGuestMode.textContent = full ? '恢复仅状态' : '对游客全开放';
+  els.btnGuestMode.textContent = full ? '切换至隐藏模式' : '切换至开放模式';
   els.btnGuestMode.classList.toggle('active', full);
   els.btnGuestMode.style.display = state.manage ? '' : 'none';
-  els.guestModeTag.textContent = '游客可见：' + (full ? '全开放（显示内容）' : '仅状态');
+  els.guestModeTag.textContent = '游客可见：' + (full ? '全开放' : '仅状态');
   els.guestModeTag.classList.toggle('tag-full', full);
 }
 
@@ -238,7 +238,7 @@ function renderSidebar() {
       + '</div>';
   }
   if (!state.manage && state.config.guestViewMode === 'status') {
-    html += '<div class="guest-note">具体事项内容仅日程主人可见</div>';
+    html += '<div class="guest-note">具体事项内容仅主人可见</div>';
   }
   html += programLegendHtml();
   els.sidebar.innerHTML = html;
@@ -277,7 +277,7 @@ function renderFormHtml(key) {
     + '</div>'
     + buildPresetsHtml()
     + '<label class="content-row">事项内容'
-    + '<input type="text" id="f-content" placeholder="选空闲时自动为“空闲”" value="' + esc(content) + '"' + (status === 'free' ? ' disabled' : '') + '>'
+    + '<input type="text" id="f-content" placeholder="空闲" value="' + esc(content) + '"' + (status === 'free' ? ' disabled' : '') + '>'
     + '</label>'
     + '<div id="splitPreview" class="preview"></div>'
     + '<div class="form-actions">'
@@ -323,7 +323,7 @@ function buildPresetsHtml() {
   return '<div class="presets">'
     + '<div class="presets-head"><span>常用事项</span></div>'
     + '<div class="preset-chips">' + (chips || '<span class="hint-inline">暂无常用项</span>') + '</div>'
-    + '<details class="preset-manager"><summary>管理常用选项（不影响已添加日程）</summary>'
+    + '<details class="preset-manager"><summary>管理常用选项</summary>'
     + '<div class="preset-edit-list">' + (rows || '<span class="hint-inline">暂无常用项</span>') + '</div>'
     + '<div class="preset-add-row"><input type="text" id="f-preset-name" placeholder="新常用事项" maxlength="12">'
     + '<button type="button" class="primary" data-action="preset-add">添加</button></div>'
@@ -351,7 +351,7 @@ function presetAdd() {
   opts.push(name);
   state.dirty = true;
   renderSidebar();
-  showToast('已添加常用项（不影响已添加日程）');
+  showToast('已添加常用项');
 }
 
 function presetDel(idx) {
@@ -375,7 +375,7 @@ function presetRename(idx) {
   opts[idx] = name;
   state.dirty = true;
   renderSidebar();
-  showToast('已修改常用项（不影响已添加日程）');
+  showToast('已修改常用项');
 }
 
 function onFormChange() {
@@ -389,7 +389,7 @@ function syncContentField() {
   var c = $('f-content');
   if (c) {
     c.disabled = status === 'free';
-    c.placeholder = status === 'free' ? '空闲事项内容固定为“空闲”' : '填写事项内容';
+    c.placeholder = status === 'free' ? '空闲' : '填写事项内容';
   }
 }
 
