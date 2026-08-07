@@ -67,6 +67,22 @@
       "end": "24:00",
       "status": "busy",
       "content": "明天是cwy生日"
+    },
+    {
+      "id": "0f64b90c-00ed-4cc5-aedd-40d6f7739cab",
+      "date": "2026-08-08",
+      "start": "08:00",
+      "end": "12:00",
+      "status": "busy",
+      "content": "休息"
+    },
+    {
+      "id": "f365faaa-7f79-4515-9e33-7428c5714998",
+      "date": "2026-08-08",
+      "start": "12:00",
+      "end": "13:00",
+      "status": "busy",
+      "content": "吃饭"
     }
   ]
 }
